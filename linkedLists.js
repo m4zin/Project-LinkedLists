@@ -1,162 +1,189 @@
-// Implementation of a linked list.
-
-// A linked list contains a collections of nodes,
-// Each node contains its own data & the reference to the next node.
-// The head is the start of the linked list.
-// The tail is the end of the linked list.
-
 class ListNode {
-    constructor(data) {
-        this.data = data;
-        this.next = null;
+    constructor(value = null, nextNode = null) {
+        this.value = value
+        this.nextNode = nextNode
     }
 }
 
-class LinkedList {
-    constructor() {
-        this.head = null;
+class LinkedLists {
+    constructor(head = null) {
+        this.head = head
     }
 
-    append(data) {
-        const node = new ListNode(data);
+    append(value) {
+        let node = new ListNode(value)
 
-        // If head is empty, then make node head.
-        if (!this.head) {
-            this.head = node;
+        // If head is empty, then append to head as first element.
+        if(!this.head) {
+            this.head = node
+            return
         }
-        // else get current head, iterate to next node until
-        // - reaching the end to append new node.
-        else {
-            let current = this.head;
-            while (current.next) {
-                current = current.next;
-            }
-            current.next = node;
+
+        //else, get current head, iterate until last nextNode and append.
+        let current = this.head
+
+        while(current.nextNode) {
+            current = current.nextNode
         }
+
+        current.nextNode = node
     }
 
-    prepend(data) {
-        const node = new ListNode(data)
-        node.next = this.head
+    prepend(value) {
+        let node = new ListNode(value)
+
+        //Get the old head.
+        let oldHead = this.head
+        //Set head to new node.
         this.head = node
+        //Set new head's next node to old head.
+        this.head.nextNode = oldHead
     }
 
     size() {
         let current = this.head
         let size = 0
-        while(current) {
+
+        while(current.nextNode) {
             size++
-            current = current.next
+            current = current.nextNode
         }
-        console.log(`size: ${size}`)
+
+        // To count last node too since while loop exits when last node null.
+        size++
+
+        console.log(`Size of list: ${size}`)
     }
 
     headNode() {
-        console.log(`head: ${this.head.data}`)
+        console.log(`Head of list: ${this.head.value}`)
     }
 
     tailNode() {
-        if (!this.head) {
-            console.log("Linked list is empty");
-            return;
+        let current = this.head
+
+        while(current.nextNode) {
+            current = current.nextNode
         }
 
-        let current = this.head;
-        while (current.next) {
-            current = current.next;
-        }
-
-        console.log(`Tail: ${current.data}`);
+        console.log(`Last node in list: ${current.value}`)
     }
 
     at(index) {
         let current = this.head
-        let count = 0
+        let indexCounter = 0
 
-        while(current.next) {
-            if(count === index) {
-                console.log(current.data + ' at index ' + count)
+        while(current.nextNode) {
+            if(indexCounter === index) {
+                console.log(`Value at index ${index} is '${current.value}'`)
                 return
-            } else {
-                current = current.next
-                count++
             }
+            indexCounter++
+            current = current.nextNode
         }
-    }
-
-    findIndex(value) {
-        let current = this.head;
-        let index = 0;
-
-        while (current) {
-            if (current.data === value) {
-                return index;
-            }
-            current = current.next;
-            index++;
-        }
-        return -1;
     }
 
     pop() {
-        if (!this.head) {
-            console.log("Linked list is empty");
-            return;
+        let current = this.head
+
+        while(current.nextNode) {
+            if(current.nextNode.nextNode === null) {
+                current.nextNode = null
+                return
+            }
+            current = current.nextNode
+        }
+    }
+
+    contains(value) {
+        let current = this.head
+
+        while(current.nextNode) {
+            if(current.value === value) {
+                console.log('Yes, value present!')
+                return
+            }
+            current = current.nextNode
+        }
+        console.log('No, value not present!')
+    }
+
+    find(value) {
+        let current = this.head
+        let indexCounter = 0
+
+        while(current.nextNode) {
+            if(current.value === value) {
+                console.log(`value '${value}' found at index ${indexCounter}`)
+                return
+            }
+            current = current.nextNode
+            indexCounter++
         }
 
-        // If there is only one node in the list
-        if (!this.head.next) {
-            this.head = null;
-            return;
-        }
-
-        let current = this.head;
-        while (current.next.next) {
-            current = current.next;
-        }
-
-        // Set the next pointer of the second last node to null
-        current.next = null;
+        console.log(`value ${value} not present!`)
     }
 
     toString() {
-        let current = this.head;
-        while (current) {
-            console.log(current.data);
-            current = current.next;
+        let current = this.head
+
+        // Printing the first element.
+        console.log(current.value)
+
+        while(current.nextNode || current.nextNode === null) {
+            console.log(current.nextNode)
+            current = current.nextNode
         }
     }
+
 }
 
-// The list.
-const linkedList = new LinkedList();
+let list = new LinkedLists()
 
-// Appending elements to list.
-linkedList.append(1);
-linkedList.append(2);
-linkedList.append(3);
-linkedList.pop()
+// Appending elements at the end of list.
+list.append('First')
+list.append('Second')
+list.append('Third')
+list.append('Fourth')
 
-linkedList.headNode()
-linkedList.tailNode()
-linkedList.at(1)
-console.log(linkedList.findIndex(2))
+// Prepending elements before current head of list.
+list.prepend('Zeroth?')
 
-linkedList.prepend(0)
+// Size of list
+list.size()
 
-linkedList.toString(); // 1 2 3
-linkedList.size(); // 3
+console.log('----')
 
+// Head of list
+list.headNode()
 
+console.log('----')
 
+// Last node of list
+list.tailNode()
 
+console.log('----')
 
+// Print value at index 2
+list.at(2)
 
+// Popping last element of list
+list.pop()
 
+console.log('----')
 
+// Checking if value is contained within list
+list.contains('Zeroth?')
 
+console.log('----')
 
+// Checking which index value is present
+list.find('First')
 
+console.log('----')
+
+// Printing the list
+list.toString()
 
 
 
